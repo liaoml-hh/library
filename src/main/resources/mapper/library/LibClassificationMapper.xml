@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.avantport.cat.service.lib.mapper.LibClassificationMapper">
+
+  <resultMap id="BaseResultMap" type="com.avantport.cat.service.lib.domain.LibClassification">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="class_name" jdbcType="VARCHAR" property="className" />
+    <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+    <result column="parent_path" jdbcType="VARCHAR" property="parentPath" />
+    <result property="createBy"      column="create_by"      />
+    <result property="createTime"    column="create_time"    />
+    <result property="updateBy"      column="update_by"      />
+    <result property="updateTime"    column="update_time"    />
+  </resultMap>
+
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.avantport.cat.service.lib.domain.LibClassification">
+    <result column="brief" jdbcType="LONGVARCHAR" property="brief" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, class_name, parent_id, parent_path
+  </sql>
+  <sql id="Blob_Column_List">
+    brief
+  </sql>
+
+  <select id="selectClassificationList" parameterType="com.avantport.cat.service.lib.domain.LibClassification"   resultMap="ResultMapWithBLOBs">
+    select
+    <include refid="Base_Column_List" />
+    from lib_classification
+    where  1 =1
+    <if test="parentId != null and parentId != 0">
+      AND parent_id = #{parentId}
+    </if>
+    <if test="parentPath != null and parentPath != ''">
+      AND parent_path like concat('%', #{parentPath}, '%')
+    </if>
+    <if test="className != null and className != ''">
+      AND class_name = #{className}
+    </if>
+    order by parent_id,class_name
+  </select>
+
+  <select id="checkClassNameUnique"  resultMap="ResultMapWithBLOBs">
+    select
+    <include refid="Base_Column_List"/>
+    from lib_classification
+    where class_name=#{className} and parent_id = #{parentId} limit 1
+  </select>
+
+  <select id="hasChildById" parameterType="Long" resultType="int">
+        select count(1) from lib_file_info
+        where parent_id = #{id}
+  </select>
+
+  <select id="checkClassificationExistFiles" parameterType="Long" resultType="int">
+        select count(1) from lib_classification where file_class_id = #{id}
+  </select>
+
+  <select id="selectByPrimaryKey"  parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    from lib_classification
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from lib_classification
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+
+  <insert id="insert" parameterType="com.avantport.cat.service.lib.domain.LibClassification">
+    insert into lib_classification (id, class_name, parent_id, 
+      parent_path, brief)
+    values (#{id,jdbcType=BIGINT}, #{className,jdbcType=VARCHAR}, #{parentId,jdbcType=BIGINT}, 
+      #{parentPath,jdbcType=VARCHAR}, #{brief,jdbcType=LONGVARCHAR})
+  </insert>
+
+  <insert id="insertSelective" parameterType="com.avantport.cat.service.lib.domain.LibClassification">
+    insert into lib_classification
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="className != null">
+        class_name,
+      </if>
+      <if test="parentId != null">
+        parent_id,
+      </if>
+      <if test="parentPath != null">
+        parent_path,
+      </if>
+      <if test="brief != null">
+        brief,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="className != null">
+        #{className,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null">
+        #{parentId,jdbcType=BIGINT},
+      </if>
+      <if test="parentPath != null">
+        #{parentPath,jdbcType=VARCHAR},
+      </if>
+      <if test="brief != null">
+        #{brief,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.avantport.cat.service.lib.domain.LibClassification">
+    update lib_classification
+    <set>
+      <if test="className != null">
+        class_name = #{className,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null">
+        parent_id = #{parentId,jdbcType=BIGINT},
+      </if>
+      <if test="parentPath != null">
+        parent_path = #{parentPath,jdbcType=VARCHAR},
+      </if>
+      <if test="brief != null">
+        brief = #{brief,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.avantport.cat.service.lib.domain.LibClassification">
+    update lib_classification
+    set class_name = #{className,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=BIGINT},
+      parent_path = #{parentPath,jdbcType=VARCHAR},
+      brief = #{brief,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <update id="updateByPrimaryKey" parameterType="com.avantport.cat.service.lib.domain.LibClassification">
+    update lib_classification
+    set class_name = #{className,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=BIGINT},
+      parent_path = #{parentPath,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
