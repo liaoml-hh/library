@@ -14,18 +14,22 @@
     <result column="file_class_id" jdbcType="BIGINT" property="fileClassId" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="del_flag" jdbcType="INTEGER" property="delFlag" />
+    <result column="create_by" jdbcType="VARCHAR" property="createBy" />
+    <result column="update_by" jdbcType="VARCHAR" property="updateBy" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
   </resultMap>
   <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.avantport.cat.service.lib.domain.LibFileInfo">
     <result column="file_brief" jdbcType="LONGVARCHAR" property="fileBrief" />
   </resultMap>
   <sql id="Base_Column_List">
     id, file_name, file_size, file_style, file_ext, file_user_id, file_uuid, file_path, 
-    state, file_class_id, create_time, update_time
+    state, file_class_id, create_time, update_time, del_flag, create_by, update_by, remark
   </sql>
   <sql id="Blob_Column_List">
     file_brief
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
     select 
     <include refid="Base_Column_List" />
     ,
@@ -37,161 +41,21 @@
     delete from lib_file_info
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.avantport.cat.service.lib.domain.LibFileInfo">
-    insert into lib_file_info (id, file_name, file_size, 
+  <insert id="insert" keyProperty="id" useGeneratedKeys="true" parameterType="com.avantport.cat.service.lib.domain.LibFileInfo">
+    insert into lib_file_info ( file_name, file_size,
       file_style, file_ext, file_user_id, 
       file_uuid, file_path, state, 
       file_class_id, create_time, update_time, 
-      file_brief)
-    values (#{id,jdbcType=BIGINT}, #{fileName,jdbcType=VARCHAR}, #{fileSize,jdbcType=BIGINT}, 
+      del_flag, create_by, update_by, 
+      remark, file_brief)
+    values ( #{fileName,jdbcType=VARCHAR}, #{fileSize,jdbcType=BIGINT},
       #{fileStyle,jdbcType=INTEGER}, #{fileExt,jdbcType=VARCHAR}, #{fileUserId,jdbcType=BIGINT}, 
       #{fileUuid,jdbcType=VARCHAR}, #{filePath,jdbcType=VARCHAR}, #{state,jdbcType=INTEGER}, 
-      #{fileClassId,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
-      #{fileBrief,jdbcType=LONGVARCHAR})
+      #{fileClassId,jdbcType=BIGINT}, CURRENT_TIMESTAMP, #{updateTime,jdbcType=TIMESTAMP},
+      #{delFlag,jdbcType=INTEGER}, #{createBy,jdbcType=VARCHAR}, #{updateBy,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{fileBrief,jdbcType=LONGVARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.avantport.cat.service.lib.domain.LibFileInfo">
-    insert into lib_file_info
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
-      <if test="fileName != null">
-        file_name,
-      </if>
-      <if test="fileSize != null">
-        file_size,
-      </if>
-      <if test="fileStyle != null">
-        file_style,
-      </if>
-      <if test="fileExt != null">
-        file_ext,
-      </if>
-      <if test="fileUserId != null">
-        file_user_id,
-      </if>
-      <if test="fileUuid != null">
-        file_uuid,
-      </if>
-      <if test="filePath != null">
-        file_path,
-      </if>
-      <if test="state != null">
-        state,
-      </if>
-      <if test="fileClassId != null">
-        file_class_id,
-      </if>
-      <if test="createTime != null">
-        create_time,
-      </if>
-      <if test="updateTime != null">
-        update_time,
-      </if>
-      <if test="fileBrief != null">
-        file_brief,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=BIGINT},
-      </if>
-      <if test="fileName != null">
-        #{fileName,jdbcType=VARCHAR},
-      </if>
-      <if test="fileSize != null">
-        #{fileSize,jdbcType=BIGINT},
-      </if>
-      <if test="fileStyle != null">
-        #{fileStyle,jdbcType=INTEGER},
-      </if>
-      <if test="fileExt != null">
-        #{fileExt,jdbcType=VARCHAR},
-      </if>
-      <if test="fileUserId != null">
-        #{fileUserId,jdbcType=BIGINT},
-      </if>
-      <if test="fileUuid != null">
-        #{fileUuid,jdbcType=VARCHAR},
-      </if>
-      <if test="filePath != null">
-        #{filePath,jdbcType=VARCHAR},
-      </if>
-      <if test="state != null">
-        #{state,jdbcType=INTEGER},
-      </if>
-      <if test="fileClassId != null">
-        #{fileClassId,jdbcType=BIGINT},
-      </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateTime != null">
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="fileBrief != null">
-        #{fileBrief,jdbcType=LONGVARCHAR},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.avantport.cat.service.lib.domain.LibFileInfo">
-    update lib_file_info
-    <set>
-      <if test="fileName != null">
-        file_name = #{fileName,jdbcType=VARCHAR},
-      </if>
-      <if test="fileSize != null">
-        file_size = #{fileSize,jdbcType=BIGINT},
-      </if>
-      <if test="fileStyle != null">
-        file_style = #{fileStyle,jdbcType=INTEGER},
-      </if>
-      <if test="fileExt != null">
-        file_ext = #{fileExt,jdbcType=VARCHAR},
-      </if>
-      <if test="fileUserId != null">
-        file_user_id = #{fileUserId,jdbcType=BIGINT},
-      </if>
-      <if test="fileUuid != null">
-        file_uuid = #{fileUuid,jdbcType=VARCHAR},
-      </if>
-      <if test="filePath != null">
-        file_path = #{filePath,jdbcType=VARCHAR},
-      </if>
-      <if test="state != null">
-        state = #{state,jdbcType=INTEGER},
-      </if>
-      <if test="fileClassId != null">
-        file_class_id = #{fileClassId,jdbcType=BIGINT},
-      </if>
-      <if test="createTime != null">
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateTime != null">
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="fileBrief != null">
-        file_brief = #{fileBrief,jdbcType=LONGVARCHAR},
-      </if>
-    </set>
-    where id = #{id,jdbcType=BIGINT}
-  </update>
-  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.avantport.cat.service.lib.domain.LibFileInfo">
-    update lib_file_info
-    set file_name = #{fileName,jdbcType=VARCHAR},
-      file_size = #{fileSize,jdbcType=BIGINT},
-      file_style = #{fileStyle,jdbcType=INTEGER},
-      file_ext = #{fileExt,jdbcType=VARCHAR},
-      file_user_id = #{fileUserId,jdbcType=BIGINT},
-      file_uuid = #{fileUuid,jdbcType=VARCHAR},
-      file_path = #{filePath,jdbcType=VARCHAR},
-      state = #{state,jdbcType=INTEGER},
-      file_class_id = #{fileClassId,jdbcType=BIGINT},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_time = #{updateTime,jdbcType=TIMESTAMP},
-      file_brief = #{fileBrief,jdbcType=LONGVARCHAR}
-    where id = #{id,jdbcType=BIGINT}
-  </update>
+
   <update id="updateByPrimaryKey" parameterType="com.avantport.cat.service.lib.domain.LibFileInfo">
     update lib_file_info
     set file_name = #{fileName,jdbcType=VARCHAR},
@@ -204,7 +68,11 @@
       state = #{state,jdbcType=INTEGER},
       file_class_id = #{fileClassId,jdbcType=BIGINT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_time = #{updateTime,jdbcType=TIMESTAMP}
+      update_time = CURRENT_TIMESTAMP,
+      del_flag = #{delFlag,jdbcType=INTEGER},
+      create_by = #{createBy,jdbcType=VARCHAR},
+      update_by = #{updateBy,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

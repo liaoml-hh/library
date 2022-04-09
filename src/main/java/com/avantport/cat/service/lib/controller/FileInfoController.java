@@ -45,31 +45,32 @@ public class FileInfoController extends BaseController {
     /**
      * 新增文件
      */
-    @Log(title = "文件管理", businessType = BusinessType.INSERT)
+   // @Log(title = "文件管理", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@Validated @RequestBody LibFileInfo fileInfo) {
+        fileInfo.setCreateBy(getLoginUserName());
         return toAjax(fileInfoService.insertFileInfo(fileInfo));
     }
 
     /**
      * 修改文件
      */
-    @Log(title = "文件管理", businessType = BusinessType.UPDATE)
+    //@Log(title = "文件管理", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@Validated @RequestBody LibFileInfo fileInfo) {
         if (UserConstants.NOT_UNIQUE.equals(fileInfoService.checkFileInfoUnique(fileInfo))) {
             return AjaxResult.error("修改文件'" + fileInfo.getFileName() + "'失败，文件名称已存在");
         }
+        fileInfo.setUpdateBy(getLoginUserName());
         return toAjax(fileInfoService.updateFileInfo(fileInfo));
     }
 
     /**
      * 删除文件
      */
-    @Log(title = "文件管理", businessType = BusinessType.DELETE)
+    //@Log(title = "文件管理", businessType = BusinessType.DELETE)
     @DeleteMapping("/{id}")
     public AjaxResult remove(@PathVariable Long id) {
-
         return toAjax(fileInfoService.deleteFileInfoById(id));
     }
 }

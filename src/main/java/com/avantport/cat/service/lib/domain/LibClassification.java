@@ -15,6 +15,8 @@ public class LibClassification extends BaseEntity {
 
     private String parentPath;
 
+    private Integer delFlag;
+
     private String brief;
 
     private List<LibClassification> children = new ArrayList();
@@ -50,6 +52,15 @@ public class LibClassification extends BaseEntity {
     public void setParentPath(String parentPath) {
         this.parentPath = parentPath == null ? null : parentPath.trim();
     }
+
+    public Integer getDelFlag() {
+        return delFlag;
+    }
+
+    public void setDelFlag(Integer delFlag) {
+        this.delFlag = delFlag;
+    }
+
 
     public String getBrief() {
         return brief;

@@ -20,6 +20,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class Application {
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
-        System.out.println("文档服务已启动\n");
+        System.out.println("知识库服务已启动\n");
     }
 }

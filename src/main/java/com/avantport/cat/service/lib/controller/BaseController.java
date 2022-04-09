@@ -1,5 +1,6 @@
 package com.avantport.cat.service.lib.controller;
 
+import com.avantport.cat.platform.api.model.LoginUser;
 import com.avantport.cat.platform.core.constant.HttpStatus;
 import com.avantport.cat.platform.core.utils.DateUtils;
 import com.avantport.cat.platform.core.utils.StringUtils;
@@ -8,10 +9,12 @@ import com.avantport.cat.platform.core.web.domain.AjaxResult;
 import com.avantport.cat.platform.core.web.page.PageDomain;
 import com.avantport.cat.platform.core.web.page.TableDataInfo;
 import com.avantport.cat.platform.core.web.page.TableSupport;
+import com.avantport.cat.platform.security.service.TokenService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 
@@ -27,7 +30,8 @@ import java.util.List;
 public class BaseController
 {
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
-
+    @Autowired
+    private TokenService tokenService;
     /**
      * 将前台传递过来的日期格式的字符串，自动转化为Date类型
      */
@@ -127,4 +131,11 @@ public class BaseController
     {
         return AjaxResult.error(message);
     }
+
+    public String getLoginUserName(){
+       // LoginUser login = tokenService.getLoginUser();
+        String username = "admin";
+        return username;
+    }
+
 }

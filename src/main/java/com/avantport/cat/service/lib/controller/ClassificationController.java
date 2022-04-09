@@ -3,8 +3,6 @@ package com.avantport.cat.service.lib.controller;
 import com.avantport.cat.platform.core.constant.UserConstants;
 import com.avantport.cat.platform.core.web.domain.AjaxResult;
 import com.avantport.cat.platform.core.web.page.TableDataInfo;
-import com.avantport.cat.platform.log.annotation.Log;
-import com.avantport.cat.platform.log.enums.BusinessType;
 import com.avantport.cat.service.lib.domain.LibClassification;
 import com.avantport.cat.service.lib.service.ClassificationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,33 +53,35 @@ public class ClassificationController extends BaseController{
     /**
      * 新增分类
      */
-    @Log(title = "分类管理", businessType = BusinessType.INSERT)
+    //@Log(title = "分类管理", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@Validated @RequestBody LibClassification classification) {
         if (UserConstants.NOT_UNIQUE.equals(classificationService.checkClassNameUnique(classification))) {
             return AjaxResult.error("新增分类'" + classification.getClassName() + "'失败，分类名称已存在");
         }
+        classification.setCreateBy(getLoginUserName());
         return toAjax(classificationService.insertClassification(classification));
     }
 
     /**
      * 修改分类
      */
-    @Log(title = "分类管理", businessType = BusinessType.UPDATE)
+    //@Log(title = "分类管理", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@Validated @RequestBody LibClassification classification) {
         if (UserConstants.NOT_UNIQUE.equals(classificationService.checkClassNameUnique(classification))) {
             return AjaxResult.error("修改分类'" + classification.getClassName() + "'失败，分类名称已存在");
-        } else if (classification.getParentId().equals(classification.getId())) {
+        } else if (classification.getParentId()!=null && classification.getParentId().equals(classification.getId())) {
             return AjaxResult.error("修改分类'" + classification.getClassName() + "'失败，上级分类不能是自己");
         }
+        classification.setUpdateBy(getLoginUserName());
         return toAjax(classificationService.updateClassification(classification));
     }
 
     /**
      * 删除分类
      */
-    @Log(title = "分类管理", businessType = BusinessType.DELETE)
+    //@Log(title = "分类管理", businessType = BusinessType.DELETE)
     @DeleteMapping("/{id}")
     public AjaxResult remove(@PathVariable Long id) {
         if (classificationService.hasChildByClassificationId(id)) {

@@ -9,6 +9,7 @@ public class LibKeyword extends BaseEntity {
 
     private String keywordName;
 
+    private Integer delFlag;
 
     public Long getId() {
         return id;
@@ -25,5 +26,15 @@ public class LibKeyword extends BaseEntity {
     public void setKeywordName(String keywordName) {
         this.keywordName = keywordName == null ? null : keywordName.trim();
     }
+
+    public Integer getDelFlag() {
+        return delFlag;
+    }
+
+    public void setDelFlag(Integer delFlag) {
+        this.delFlag = delFlag;
+    }
+
+
 
 }

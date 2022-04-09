@@ -26,52 +26,7 @@
     values (#{id,jdbcType=BIGINT}, #{logInfo,jdbcType=VARCHAR}, #{userId,jdbcType=BIGINT}, 
       #{createTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.avantport.cat.service.lib.domain.LibUploadLog">
-    insert into lib_upload_log
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
-      <if test="logInfo != null">
-        log_info,
-      </if>
-      <if test="userId != null">
-        user_id,
-      </if>
-      <if test="createTime != null">
-        create_time,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=BIGINT},
-      </if>
-      <if test="logInfo != null">
-        #{logInfo,jdbcType=VARCHAR},
-      </if>
-      <if test="userId != null">
-        #{userId,jdbcType=BIGINT},
-      </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.avantport.cat.service.lib.domain.LibUploadLog">
-    update lib_upload_log
-    <set>
-      <if test="logInfo != null">
-        log_info = #{logInfo,jdbcType=VARCHAR},
-      </if>
-      <if test="userId != null">
-        user_id = #{userId,jdbcType=BIGINT},
-      </if>
-      <if test="createTime != null">
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-    </set>
-    where id = #{id,jdbcType=BIGINT}
-  </update>
+
   <update id="updateByPrimaryKey" parameterType="com.avantport.cat.service.lib.domain.LibUploadLog">
     update lib_upload_log
     set log_info = #{logInfo,jdbcType=VARCHAR},

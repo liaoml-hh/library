@@ -13,6 +13,8 @@ public class LibDocInfo extends BaseEntity {
 
     private String docBiref;
 
+    private Integer delFlag;
+
     public Long getId() {
         return id;
     }
@@ -44,5 +46,14 @@ public class LibDocInfo extends BaseEntity {
     public void setDocBiref(String docBiref) {
         this.docBiref = docBiref == null ? null : docBiref.trim();
     }
+
+    public Integer getDelFlag() {
+        return delFlag;
+    }
+
+    public void setDelFlag(Integer delFlag) {
+        this.delFlag = delFlag;
+    }
+
 
 }

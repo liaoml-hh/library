@@ -2,6 +2,7 @@ package com.avantport.cat.service.lib.service.impl;
 
 import com.avantport.cat.platform.core.constant.UserConstants;
 import com.avantport.cat.platform.core.utils.StringUtils;
+import com.avantport.cat.platform.datascope.annotation.DataScope;
 import com.avantport.cat.service.lib.domain.LibKeyword;
 import com.avantport.cat.service.lib.mapper.LibKeywordMapper;
 import com.avantport.cat.service.lib.service.KeywordService;
@@ -18,6 +19,7 @@ import java.util.List;
 public class KeyWordServiceImpl implements KeywordService {
     @Resource
     private LibKeywordMapper keywordMapper;
+
     @Override
     public List<LibKeyword> getList(LibKeyword Keyword) {
         List<LibKeyword> LibKeyword =  keywordMapper.selectKeywordList(Keyword);
@@ -47,7 +49,7 @@ public class KeyWordServiceImpl implements KeywordService {
 
     @Override
     public boolean checkKeywordExistFiles(Long id) {
-        return keywordMapper.checkKeywordExistFiles(id);
+        return keywordMapper.checkKeywordExistFiles(id)>0;
     }
 
     @Override

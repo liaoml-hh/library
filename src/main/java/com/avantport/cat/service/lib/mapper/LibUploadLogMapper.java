@@ -7,11 +7,7 @@ public interface LibUploadLogMapper {
 
     int insert(LibUploadLog record);
 
-    int insertSelective(LibUploadLog record);
-
     LibUploadLog selectByPrimaryKey(Long id);
-
-    int updateByPrimaryKeySelective(LibUploadLog record);
 
     int updateByPrimaryKey(LibUploadLog record);
 }

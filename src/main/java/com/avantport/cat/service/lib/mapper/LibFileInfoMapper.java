@@ -13,10 +13,6 @@ public interface LibFileInfoMapper {
 
     LibFileInfo selectByPrimaryKey(Long id);
 
-    int updateByPrimaryKeySelective(LibFileInfo record);
-
-    int updateByPrimaryKeyWithBLOBs(LibFileInfo record);
-
     int updateByPrimaryKey(LibFileInfo record);
 
     LibFileInfo checkFileInfoUnique(String fileName);

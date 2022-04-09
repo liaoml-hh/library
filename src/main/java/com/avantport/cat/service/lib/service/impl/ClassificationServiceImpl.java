@@ -61,7 +61,7 @@ public class ClassificationServiceImpl implements ClassificationService {
 
     @Override
     public boolean checkClassificationExistFiles(Long id) {
-        return libClassificationMapper.checkClassificationExistFiles(id);
+        return libClassificationMapper.checkClassificationExistFiles(id)>0 ? true : false;
     }
 
     @Override

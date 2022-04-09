@@ -25,6 +25,8 @@ public class LibFileInfo extends BaseEntity {
 
     private Long fileClassId;
 
+    private Integer delFlag;
+
     private String fileBrief;
 
     public Long getId() {
@@ -106,6 +108,17 @@ public class LibFileInfo extends BaseEntity {
     public void setFileClassId(Long fileClassId) {
         this.fileClassId = fileClassId;
     }
+
+
+
+    public Integer getDelFlag() {
+        return delFlag;
+    }
+
+    public void setDelFlag(Integer delFlag) {
+        this.delFlag = delFlag;
+    }
+
 
     public String getFileBrief() {
         return fileBrief;

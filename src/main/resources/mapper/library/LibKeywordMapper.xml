@@ -4,10 +4,15 @@
   <resultMap id="BaseResultMap" type="com.avantport.cat.service.lib.domain.LibKeyword">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="keyword_name" jdbcType="VARCHAR" property="keywordName" />
+    <result column="del_flag" jdbcType="INTEGER" property="delFlag" />
+    <result column="create_by" jdbcType="VARCHAR" property="createBy" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_by" jdbcType="VARCHAR" property="updateBy" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, keyword_name, create_time
+    id, keyword_name, del_flag, create_by, create_time, update_by, update_time, remark
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
@@ -16,52 +21,28 @@
     where id = #{id,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from lib_keyword
+    update  lib_keyword set del_flag = 1
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.avantport.cat.service.lib.domain.LibKeyword">
-    insert into lib_keyword (id, keyword_name, create_time
-      )
-    values (#{id,jdbcType=BIGINT}, #{keywordName,jdbcType=VARCHAR}, CURRENT_TIMESTAMP
-      )
+  <insert id="insert" parameterType="com.avantport.cat.service.lib.domain.LibKeyword"
+          keyProperty="id" useGeneratedKeys="true">
+    insert into lib_keyword ( keyword_name, del_flag,
+      create_by, create_time, update_by, 
+      update_time, remark)
+    values ( #{keywordName,jdbcType=VARCHAR}, 0,
+      #{createBy,jdbcType=VARCHAR}, CURRENT_TIMESTAMP, #{updateBy,jdbcType=VARCHAR},
+      #{updateTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.avantport.cat.service.lib.domain.LibKeyword">
-    insert into lib_keyword
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
-      <if test="keywordName != null">
-        keyword_name,
-      </if>
-      CURRENT_TIMESTAMP
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=BIGINT},
-      </if>
-      <if test="keywordName != null">
-        #{keywordName,jdbcType=VARCHAR},
-      </if>
-      CURRENT_TIMESTAMP
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.avantport.cat.service.lib.domain.LibKeyword">
-    update lib_keyword
-    <set>
-      <if test="keywordName != null">
-        keyword_name = #{keywordName,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null">
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-    </set>
-    where id = #{id,jdbcType=BIGINT}
-  </update>
+
   <update id="updateByPrimaryKey" parameterType="com.avantport.cat.service.lib.domain.LibKeyword">
     update lib_keyword
     set keyword_name = #{keywordName,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=TIMESTAMP}
+      del_flag = #{delFlag,jdbcType=INTEGER},
+      create_by = #{createBy,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_by = #{updateBy,jdbcType=VARCHAR},
+      update_time =CURRENT_TIMESTAMP,
+      remark = #{remark,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 
@@ -69,11 +50,16 @@
     select
     <include refid="Base_Column_List" />
     from lib_keyword
-    where  1 = 1
+    where  1 = 1 and del_flag = 0
     <if test="keywordName != null">
-      AND keyword_name like concat('%', #{keyword_name}, '%')
+      AND keyword_name like concat('%', #{keywordName}, '%')
     </if>
-    order by create_time
+    <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+      and date_format(create_time,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+    </if>
+    <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+      and date_format(create_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+    </if>
   </select>
 
   <select id="checkKeywordUnique"  resultMap="BaseResultMap">

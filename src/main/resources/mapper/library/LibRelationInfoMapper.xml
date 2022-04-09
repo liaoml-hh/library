@@ -27,41 +27,7 @@
     values (#{fileId,jdbcType=BIGINT}, #{keywordId,jdbcType=BIGINT}, #{createTime,jdbcType=TIMESTAMP}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.avantport.cat.service.lib.domain.LibRelationInfo">
-    insert into lib_relation_info
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="fileId != null">
-        file_id,
-      </if>
-      <if test="keywordId != null">
-        keyword_id,
-      </if>
-      <if test="createTime != null">
-        create_time,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="fileId != null">
-        #{fileId,jdbcType=BIGINT},
-      </if>
-      <if test="keywordId != null">
-        #{keywordId,jdbcType=BIGINT},
-      </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.avantport.cat.service.lib.domain.LibRelationInfo">
-    update lib_relation_info
-    <set>
-      <if test="createTime != null">
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-    </set>
-    where file_id = #{fileId,jdbcType=BIGINT}
-      and keyword_id = #{keywordId,jdbcType=BIGINT}
-  </update>
+
   <update id="updateByPrimaryKey" parameterType="com.avantport.cat.service.lib.domain.LibRelationInfo">
     update lib_relation_info
     set create_time = #{createTime,jdbcType=TIMESTAMP}

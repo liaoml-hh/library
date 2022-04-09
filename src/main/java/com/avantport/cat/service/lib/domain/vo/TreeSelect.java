@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.avantport.cat.platform.api.domain.SysDept;
 import com.avantport.cat.service.lib.domain.LibClassification;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -17,7 +16,7 @@ public class TreeSelect implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /** 节点ID */
-    private Long id;
+    private Long value;
 
     /** 节点名称 */
     private String label;
@@ -31,19 +30,19 @@ public class TreeSelect implements Serializable {
     }
 
     public TreeSelect(LibClassification classification) {
-        this.id = classification.getId();
+        this.value = classification.getId();
         this.label = classification.getClassName();
         this.children = classification.getChildren().stream().map(TreeSelect::new).collect(Collectors.toList());
     }
 
 
 
-    public Long getId() {
-        return id;
+    public Long getValue() {
+        return value;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setValue(Long value) {
+        this.value = value;
     }
 
     public String getLabel() {

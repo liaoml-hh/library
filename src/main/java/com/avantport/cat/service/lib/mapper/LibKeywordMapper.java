@@ -10,11 +10,7 @@ public interface LibKeywordMapper {
 
     int insert(LibKeyword record);
 
-    int insertSelective(LibKeyword record);
-
     LibKeyword selectByPrimaryKey(Long id);
-
-    int updateByPrimaryKeySelective(LibKeyword record);
 
     int updateByPrimaryKey(LibKeyword record);
 
@@ -22,5 +18,5 @@ public interface LibKeywordMapper {
 
     LibKeyword checkKeywordUnique(String keywordName);
 
-    boolean checkKeywordExistFiles(Long id);
+    int checkKeywordExistFiles(Long id);
 }

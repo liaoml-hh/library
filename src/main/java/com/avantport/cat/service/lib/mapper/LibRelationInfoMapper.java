@@ -8,11 +8,9 @@ public interface LibRelationInfoMapper {
 
     int insert(LibRelationInfo record);
 
-    int insertSelective(LibRelationInfo record);
 
     LibRelationInfo selectByPrimaryKey(LibRelationInfoKey key);
 
-    int updateByPrimaryKeySelective(LibRelationInfo record);
 
     int updateByPrimaryKey(LibRelationInfo record);
 }
