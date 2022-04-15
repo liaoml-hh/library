@@ -72,4 +72,18 @@
   <select id="checkKeywordExistFiles" parameterType="Long" resultType="int">
         select count(1) from lib_relation_info where keyword_id = #{id}
   </select>
+
+  <select id="selectKeywordAll" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from lib_keyword where del_flag = 0
+  </select>
+
+  <select id="selectByFileId"  parameterType="Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from lib_keyword where del_flag = 0 and id in (select distinct(rel.keyword_id) from lib_relation_info rel where rel.file_id = #{id})
+  </select>
+
+
 </mapper>

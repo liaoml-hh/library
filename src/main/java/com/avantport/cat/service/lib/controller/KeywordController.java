@@ -3,8 +3,6 @@ package com.avantport.cat.service.lib.controller;
 import com.avantport.cat.platform.core.constant.UserConstants;
 import com.avantport.cat.platform.core.web.domain.AjaxResult;
 import com.avantport.cat.platform.core.web.page.TableDataInfo;
-import com.avantport.cat.platform.log.annotation.Log;
-import com.avantport.cat.platform.log.enums.BusinessType;
 import com.avantport.cat.service.lib.domain.LibKeyword;
 import com.avantport.cat.service.lib.service.KeywordService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,5 +80,15 @@ public class KeywordController extends BaseController {
             return AjaxResult.error("此关键词存在关联的文件,不允许删除");
         }
         return toAjax(keywordService.deleteKeywordById(id));
+    }
+
+
+    /**
+     * 获取关键词选择框列表
+     */
+    @GetMapping("/optionselect")
+    public AjaxResult optionselect() {
+        List<LibKeyword> posts = keywordService.selectKeywordAll();
+        return AjaxResult.success(posts);
     }
 }

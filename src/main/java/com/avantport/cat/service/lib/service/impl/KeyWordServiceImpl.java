@@ -2,7 +2,6 @@ package com.avantport.cat.service.lib.service.impl;
 
 import com.avantport.cat.platform.core.constant.UserConstants;
 import com.avantport.cat.platform.core.utils.StringUtils;
-import com.avantport.cat.platform.datascope.annotation.DataScope;
 import com.avantport.cat.service.lib.domain.LibKeyword;
 import com.avantport.cat.service.lib.mapper.LibKeywordMapper;
 import com.avantport.cat.service.lib.service.KeywordService;
@@ -55,6 +54,11 @@ public class KeyWordServiceImpl implements KeywordService {
     @Override
     public int deleteKeywordById(Long id) {
         return keywordMapper.deleteByPrimaryKey(id);
+    }
+
+    @Override
+    public List<LibKeyword> selectKeywordAll() {
+        return keywordMapper.selectKeywordAll();
     }
 
     @Override

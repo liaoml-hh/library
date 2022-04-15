@@ -2,7 +2,8 @@ package com.avantport.cat.service.lib.domain;
 
 import com.avantport.cat.platform.core.web.domain.BaseEntity;
 
-import java.util.Date;
+import java.util.List;
+
 
 public class LibFileInfo extends BaseEntity {
     private Long id;
@@ -28,6 +29,11 @@ public class LibFileInfo extends BaseEntity {
     private Integer delFlag;
 
     private String fileBrief;
+    private Long[] keywordIds;
+    private String keyWords;
+    private LibClassification classification;
+    private List<LibKeyword> libKeywordList;
+
 
     public Long getId() {
         return id;
@@ -126,5 +132,37 @@ public class LibFileInfo extends BaseEntity {
 
     public void setFileBrief(String fileBrief) {
         this.fileBrief = fileBrief == null ? null : fileBrief.trim();
+    }
+
+    public Long[] getKeywordIds() {
+        return keywordIds;
+    }
+
+    public void setKeywordIds(Long[] keywordIds) {
+        this.keywordIds = keywordIds;
+    }
+
+    public String getKeyWords() {
+        return keyWords;
+    }
+
+    public void setKeyWords(String keyWords) {
+        this.keyWords = keyWords;
+    }
+
+    public LibClassification getClassification() {
+        return classification;
+    }
+
+    public void setClassification(LibClassification classification) {
+        this.classification = classification;
+    }
+
+    public List<LibKeyword> getLibKeywordList() {
+        return libKeywordList;
+    }
+
+    public void setLibKeywordList(List<LibKeyword> libKeywordList) {
+        this.libKeywordList = libKeywordList;
     }
 }

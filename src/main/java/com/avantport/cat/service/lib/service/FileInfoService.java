@@ -41,4 +41,10 @@ public interface FileInfoService {
      */
     int deleteFileInfoById(Long id);
 
+    /**
+     * 一次上传多个文件
+     * @param list
+     * @return
+     */
+    int insertFilesInfo(List<LibFileInfo> list);
 }

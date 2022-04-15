@@ -47,4 +47,9 @@ public interface KeywordService {
      */
     int deleteKeywordById(Long id);
 
+    /**
+     * 查询所有的关键词
+     * @return
+     */
+    List<LibKeyword> selectKeywordAll();
 }

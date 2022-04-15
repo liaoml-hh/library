@@ -37,10 +37,10 @@
     from lib_file_info
     where id = #{id,jdbcType=BIGINT}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from lib_file_info
+  <update id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    update  lib_file_info set del_flag = 1
     where id = #{id,jdbcType=BIGINT}
-  </delete>
+  </update>
   <insert id="insert" keyProperty="id" useGeneratedKeys="true" parameterType="com.avantport.cat.service.lib.domain.LibFileInfo">
     insert into lib_file_info ( file_name, file_size,
       file_style, file_ext, file_user_id, 
@@ -52,11 +52,11 @@
       #{fileStyle,jdbcType=INTEGER}, #{fileExt,jdbcType=VARCHAR}, #{fileUserId,jdbcType=BIGINT}, 
       #{fileUuid,jdbcType=VARCHAR}, #{filePath,jdbcType=VARCHAR}, #{state,jdbcType=INTEGER}, 
       #{fileClassId,jdbcType=BIGINT}, CURRENT_TIMESTAMP, #{updateTime,jdbcType=TIMESTAMP},
-      #{delFlag,jdbcType=INTEGER}, #{createBy,jdbcType=VARCHAR}, #{updateBy,jdbcType=VARCHAR}, 
+      0, #{createBy,jdbcType=VARCHAR}, #{updateBy,jdbcType=VARCHAR},
       #{remark,jdbcType=VARCHAR}, #{fileBrief,jdbcType=LONGVARCHAR})
   </insert>
 
-  <update id="updateByPrimaryKey" parameterType="com.avantport.cat.service.lib.domain.LibFileInfo">
+  <update id="updateByPrimaryKey"  parameterType="com.avantport.cat.service.lib.domain.LibFileInfo">
     update lib_file_info
     set file_name = #{fileName,jdbcType=VARCHAR},
       file_size = #{fileSize,jdbcType=BIGINT},
@@ -72,7 +72,60 @@
       del_flag = #{delFlag,jdbcType=INTEGER},
       create_by = #{createBy,jdbcType=VARCHAR},
       update_by = #{updateBy,jdbcType=VARCHAR},
-      remark = #{remark,jdbcType=VARCHAR}
+      remark = #{remark,jdbcType=VARCHAR},
+        file_brief = #{fileBrief,jdbcType=LONGVARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+
+  <select id="selectFileInfoList" parameterType="com.avantport.cat.service.lib.domain.LibFileInfo"   resultMap="ResultMapWithBLOBs">
+    select
+    f.id, f.file_name, f.file_size, f.file_style, f.file_ext, f.file_user_id, f.file_uuid, file_path,
+    f.state, f.file_class_id, f.create_time, f.update_time, f.del_flag, f.create_by, f.update_by, f.remark,f.file_brief
+    from lib_file_info f left join lib_classification classification on (f.file_class_id = classification.id)
+    where  f.del_flag = 0
+    <if test="fileName != null and fileName != ''">
+      AND f.file_name = #{fileName}
+    </if>
+    <if test="fileClassId != null and fileClassId != 0">
+      AND f.file_class_id = #{fileClassId} OR f.file_class_id IN
+      ( SELECT t.id FROM lib_classification t WHERE t.parent_path like concat('%', #{fileClassId}, '%'))
+    </if>
+        <if test="keywordIds != null and keywordIds.length >0 ">
+          and f.id in ( SELECT DISTINCT(info.file_id) FROM lib_relation_info info WHERE info.keyword_id in
+          <foreach item="item" index="index" collection="keywordIds" open="("
+                   separator="," close=")">
+            #{item}
+          </foreach>
+          )
+        </if>
+  </select>
+  <insert id="insertFilesInfo" >
+  insert into lib_file_info ( file_name, file_size,
+   file_ext,
+  file_uuid,
+   create_time,
+  del_flag, create_by)
+   values
+    <foreach collection="list" item="file" index="index" separator=",">
+      (
+       #{file.fileName,jdbcType=VARCHAR},
+      #{file.fileSize,jdbcType=BIGINT},
+      #{file.fileExt,jdbcType=VARCHAR},
+      #{file.fileUuid,jdbcType=VARCHAR},
+       CURRENT_TIMESTAMP,
+      0,
+     #{file.createBy,jdbcType=VARCHAR}      )
+    </foreach>
+  </insert>
+
+  <select id="checkFileInfoUnique"  resultMap="ResultMapWithBLOBs">
+    select
+    <include refid="Base_Column_List"/>
+    from lib_file_info
+    where file_name=#{fileName} limit 1
+  </select>
+
+
+
 </mapper>

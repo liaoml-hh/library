@@ -1,17 +1,18 @@
 package com.avantport.cat.service.lib.controller;
 
 import com.avantport.cat.platform.core.constant.UserConstants;
+import com.avantport.cat.platform.core.utils.StringUtils;
 import com.avantport.cat.platform.core.web.domain.AjaxResult;
 import com.avantport.cat.platform.core.web.page.TableDataInfo;
-import com.avantport.cat.platform.log.annotation.Log;
-import com.avantport.cat.platform.log.enums.BusinessType;
 import com.avantport.cat.service.lib.domain.LibFileInfo;
 import com.avantport.cat.service.lib.service.FileInfoService;
+import com.avantport.cat.service.lib.service.RelationInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @Author lml
@@ -23,6 +24,8 @@ public class FileInfoController extends BaseController {
     
     @Autowired
     private FileInfoService fileInfoService;
+    @Autowired
+    private RelationInfoService relationInfoService;
     /**
      * 分页获取文件表所有数据
      */
@@ -39,22 +42,27 @@ public class FileInfoController extends BaseController {
      */
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable Long id) {
-        return AjaxResult.success(fileInfoService.selectFileInfoById(id));
+        AjaxResult ajax = AjaxResult.success();
+        Set<Long> keywordIds = relationInfoService.getRelationInfoByFileId(id);
+        if (StringUtils.isNotNull(id)) {
+            ajax.put(AjaxResult.DATA_TAG,fileInfoService.selectFileInfoById(id));
+            ajax.put("keywordIds", keywordIds);
+        }
+        return ajax;
     }
-
     /**
      * 新增文件
      */
-   // @Log(title = "文件管理", businessType = BusinessType.INSERT)
+    // @Log(title = "文件管理", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@Validated @RequestBody LibFileInfo fileInfo) {
-        fileInfo.setCreateBy(getLoginUserName());
-        return toAjax(fileInfoService.insertFileInfo(fileInfo));
+    public AjaxResult add(@Validated @RequestBody LibFileInfo list) {
+        list.setCreateBy(getLoginUserName());
+        return toAjax(fileInfoService.insertFileInfo(list));
     }
 
-    /**
-     * 修改文件
-     */
+        /**
+         * 修改文件
+         */
     //@Log(title = "文件管理", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@Validated @RequestBody LibFileInfo fileInfo) {

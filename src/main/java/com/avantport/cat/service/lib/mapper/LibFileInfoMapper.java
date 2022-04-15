@@ -20,4 +20,6 @@ public interface LibFileInfoMapper {
     List<LibFileInfo> selectFileInfoList(LibFileInfo fileInfo);
 
     boolean checkFileInfoExistFiles(Long id);
+
+    int insertFilesInfo(List<LibFileInfo> list);
 }
